@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DomainListingSchema, DomainListQuerySchema } from "../types/index";
+import { DomainListingSchema, DomainListQuerySchema, SearchDomainsSchema } from "../types/index";
 import { prisma } from "@repo/db/src/index";
 
 export const domainList = async (req: Request, res: Response) => {
@@ -19,6 +19,8 @@ export const domainList = async (req: Request, res: Response) => {
       maxPrice,
       page = 1,
       limit = 10,
+      sortBy = "createdAt",
+      sortOrder = "desc",
     } = parsedData.data;
 
     const pageNumber = page;
@@ -52,6 +54,9 @@ export const domainList = async (req: Request, res: Response) => {
       where: filters,
       skip,
       take: pageSize,
+      orderBy: {
+        [sortBy]: sortOrder,
+      }
     });
 
     const totalDomains = await prisma.domain.count({ where: filters });
@@ -196,3 +201,39 @@ export const deleteDomainListing = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const searchDomains = async (req: Request, res: Response) => {
+
+  const parsedQuery = SearchDomainsSchema.safeParse(req.query);
+
+  if (!parsedQuery.success) {
+    res.status(400).json({
+      message: "Invalid query parameters",
+      errors: parsedQuery.error.format(),
+    });
+    return;
+  }
+
+  const { domainName } = parsedQuery.data;
+
+  try {
+    const domain = await prisma.domain.findMany({
+      where: domainName
+        ? { domainName: { contains: domainName, mode: "insensitive" } }
+        : {},
+    });
+
+    res.json({
+      data: domain,
+      count: domain.length
+    });
+    return;
+  } catch (error) {
+    const err = error as Error;
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+    return;
+  }
+};
+

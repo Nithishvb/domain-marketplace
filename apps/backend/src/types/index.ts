@@ -96,6 +96,22 @@ export const DomainListQuerySchema = z.object({
     .refine((val) => val > 0 && val <= 100, {
       message: "Limit must be between 1 and 100",
     }),
+  sortBy: z
+    .string()
+    .optional()
+    .refine((val) => !val || ["domainName", "price", "createdAt"].includes(val), {
+      message: "sortBy must be one of 'domainName' or 'price'",
+    }),
+  sortOrder: z
+    .string()
+    .optional()
+    .refine((val) => !val || ["asc", "desc"].includes(val), {
+      message: "sortOrder must be either 'asc' or 'desc'",
+    }),
+});
+
+export const SearchDomainsSchema = z.object({
+  domainName: z.string().optional(),
 });
 
 declare global {
