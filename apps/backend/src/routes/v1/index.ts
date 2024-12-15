@@ -1,6 +1,7 @@
 import express from "express";
-import { login } from "../../controllers/Login.controller";
+import { domainRouter } from "./domains";
+
 export const router = express.Router();
 
-router.get('/login', login);
+router.use('/domains', domainRouter);
 
