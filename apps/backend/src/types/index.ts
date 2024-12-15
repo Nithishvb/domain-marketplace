@@ -99,9 +99,12 @@ export const DomainListQuerySchema = z.object({
   sortBy: z
     .string()
     .optional()
-    .refine((val) => !val || ["domainName", "price", "createdAt"].includes(val), {
-      message: "sortBy must be one of 'domainName' or 'price'",
-    }),
+    .refine(
+      (val) => !val || ["domainName", "price", "createdAt"].includes(val),
+      {
+        message: "sortBy must be one of 'domainName' or 'price'",
+      }
+    ),
   sortOrder: z
     .string()
     .optional()
@@ -113,6 +116,51 @@ export const DomainListQuerySchema = z.object({
 export const SearchDomainsSchema = z.object({
   domainName: z.string().optional(),
 });
+
+export const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+    "Password must contain at least one number, one uppercase, and one lowercase letter"
+  );
+
+export const emailSchema = z
+  .string()
+  .email()
+  .min(1)
+  .transform((email) => email.toLowerCase());
+
+export const SignupSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+  type: z.enum(["USER", "ADMIN"], {
+    required_error: "Type is required",
+    invalid_type_error: "Type must be either 'user' or 'admin'",
+  }),
+  firstName: z
+    .string({ required_error: "First name is required" })
+    .min(1, "First name cannot be empty"),
+  lastName: z
+    .string({ required_error: "Last name is required" })
+    .min(1, "Last name cannot be empty"),
+  city: z
+    .string({ required_error: "City is required" })
+    .min(1, "City cannot be empty"),
+  country: z
+    .string({ required_error: "Country is required" })
+    .min(1, "Country cannot be empty"),
+  businessType: z.enum(["INDIVIDUAL", "COMPANY"], {
+    required_error: "Business Type is required",
+    invalid_type_error:
+      "Business Type must be either 'individual' or 'company'",
+  }),
+});
+
+export const SigninSchema = z.object({
+  email: emailSchema,
+  password: z.string(),
+})
 
 declare global {
   namespace Express {
