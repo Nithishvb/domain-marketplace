@@ -160,7 +160,22 @@ export const SignupSchema = z.object({
 export const SigninSchema = z.object({
   email: emailSchema,
   password: z.string(),
-})
+});
+
+export const PasswordResetSchema = z.object({
+  email: emailSchema,
+});
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(1),
+    newpassword: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newpassword === data.confirmPassword, {
+    message: "Confirm password must match password",
+    path: ["confirmPassword"],
+  });
 
 declare global {
   namespace Express {
