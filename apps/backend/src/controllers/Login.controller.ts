@@ -104,7 +104,8 @@ export const signin = async (req: Request, res: Response) => {
       return;
     }
 
-    const token = jwt.sign(
+    // Access Token
+    const accessToken = jwt.sign(
       {
         userId: user.id,
         role: user.role,
@@ -113,8 +114,30 @@ export const signin = async (req: Request, res: Response) => {
       { expiresIn: "5h" }
     );
 
+    // Refresh Token
+    const refreshToken = jwt.sign(
+      { userId: user.id,
+        role: user.role,
+      },
+      JWT_PASSWORD,
+      { expiresIn: '7d' }
+    );
+
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: "strict",
+      maxAge: 5 * 60 * 60 * 1000,
+    });
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+    });
+
     res.json({
-      token,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
