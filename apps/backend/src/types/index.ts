@@ -5,47 +5,45 @@ const ValidDomainExtensions = [
   "org",
   "net",
   "info",
-  ".biz",
-  ".gov",
-  ".edu",
-  ".mil",
-  ".co",
-  ".io",
-  ".me",
-  ".app",
-  ".dev",
-  ".xyz",
-  ".online",
-  ".store",
-  ".site",
-  ".tech",
-  ".pro",
-  ".name",
-  ".tv",
-  ".cc",
-  ".us",
-  ".asia",
+  "biz",
+  "gov",
+  "edu",
+  "mil",
+  "co",
+  "io",
+  "me",
+  "app",
+  "dev",
+  "xyz",
+  "online",
+  "store",
+  "site",
+  "tech",
+  "pro",
+  "name",
+  "tv",
+  "cc",
+  "us",
+  "asia",
 ];
 
+const validDomainNameSchema = z
+  .string({
+    required_error: "Domain name is required",
+  })
+  .min(1, "Domain name is required")
+  .refine(
+    (domainName) => {
+      const parts = domainName.split(".");
+      return ValidDomainExtensions.includes(parts[parts.length - 1]);
+    },
+    {
+      message: "Domain extension must be valid",
+    }
+  );
+
 export const DomainListingSchema = z.object({
-  domainName: z
-    .string({
-      required_error: "Domain name is required",
-    })
-    .min(1, "Domain name is required")
-    .regex(
-      /^[a-zA-Z0-9-]+\.(com|org)$/,
-      "Domain name must be in a valid format (e.g., domain.com or domain.org)"
-    )
-    .refine(
-      (domainName) => {
-        const parts = domainName.split(".");
-        return ValidDomainExtensions.includes(parts[parts.length - 1]);
-      },
-      {
-        message: "Domain extension must be valid",
-      }
-    ),
+  domainName: validDomainNameSchema,
   description: z.string().optional(),
   price: z
     .number({
@@ -176,6 +174,10 @@ export const resetPasswordSchema = z
     message: "Confirm password must match password",
     path: ["confirmPassword"],
   });
+
+export const VerifyDomainSchema = z.object({
+  domain: validDomainNameSchema,
+});
 
 declare global {
   namespace Express {

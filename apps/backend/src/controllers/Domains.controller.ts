@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { DomainListingSchema, DomainListQuerySchema, SearchDomainsSchema } from "../types/index";
+import { DomainListingSchema, DomainListQuerySchema, SearchDomainsSchema, VerifyDomainSchema } from "../types/index";
 import { prisma } from "@repo/db/src/index";
+import { generateRandomSHA256Hash } from "../utils/verficiationCode";
+import { verifyDNSOwnership } from "../utils/verifyDomain";
 
 export const domainList = async (req: Request, res: Response) => {
   try {
@@ -99,8 +101,13 @@ export const createDomainListing = async (req: Request, res: Response) => {
       },
     });
 
+    const verficiationCode = generateRandomSHA256Hash();
+
+    await saveDnsVerificationToken(domainName, verficiationCode, req.userId || 1);
+
     res.json({
       data: domain,
+      verificationCode: verficiationCode
     });
     return;
   } catch (error) {
@@ -237,3 +244,71 @@ export const searchDomains = async (req: Request, res: Response) => {
   }
 };
 
+export const verifyDomain = async (req: Request, res: Response) => {  
+  try{
+    const parsedData = VerifyDomainSchema.safeParse(req.body);
+    if (!parsedData.success) {
+      res
+        .status(400)
+        .json({ message: "Validation failed", errors: parsedData.error.errors });
+      return;
+    };
+
+    const { domain } = parsedData.data;
+    const sellerId = req.userId || 1; 
+
+    const verificationRecord = await prisma.domainVerification.findFirst({
+      where: {
+        domain,
+        userId: sellerId,
+        isVerified: false,
+      },
+    });
+
+    if (!verificationRecord) {
+      res.status(404).json({ message: "Verification record not found or already verified" });
+      return;
+    }
+
+    const isVerified = await verifyDNSOwnership(domain, verificationRecord.verificationCode);
+
+    if (!isVerified) {
+      res.status(400).json({
+        message: "Verification failed. We couldn't find the TXT record or it may be incorrect. Please double-check your DNS settings and try verifying again after a few minutes",
+      });
+      return;
+    };
+
+    await prisma.domainVerification.update({
+      where: { id: verificationRecord.id },
+      data: { isVerified: true },
+    });
+
+    res.status(200).json({
+      message: "Domain ownership verified successfully!",
+      domain: domain,
+    });
+    return;
+    
+  }catch(error){
+    const err = error as Error;
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+    return;
+  }
+}
+
+const saveDnsVerificationToken = async (domainName: string, verficiationCode: string, ownerId: number) => {
+  try{
+    await prisma.domainVerification.create({
+      data: {
+        domain: domainName,
+        verificationCode: verficiationCode,
+        userId: ownerId
+      }
+    });
+  }catch(err){
+    return err;
+  }
+}

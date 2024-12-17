@@ -24,64 +24,76 @@ enum DomainStatus {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  email         String         @unique
-  password      String
-  role          UserRole       @default(USER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  firstName     String
-  lastName      String
-  city          String
-  country       String
-  businessType  BusinessType
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
+  password     String
+  role         UserRole     @default(USER)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  firstName    String
+  lastName     String
+  city         String
+  country      String
+  businessType BusinessType
 
-  domains       Domain[]
-  transactionsAsBuyer Transaction[] @relation("BuyerTransactions")
-  transactionsAsSeller Transaction[] @relation("SellerTransactions")
-  ownershipsAsSeller Ownership[]    @relation("SellerOwnerships")
-  ownershipsAsBuyer  Ownership[]    @relation("BuyerOwnerships")
+  domains              Domain[]
+  transactionsAsBuyer  Transaction[]        @relation("BuyerTransactions")
+  transactionsAsSeller Transaction[]        @relation("SellerTransactions")
+  ownershipsAsSeller   Ownership[]          @relation("SellerOwnerships")
+  ownershipsAsBuyer    Ownership[]          @relation("BuyerOwnerships")
+  DomainVerification   DomainVerification[]
 }
 
 model Domain {
-  id            Int            @id @default(autoincrement())
-  domainName    String         @unique
-  price         Float
-  description   String
-  status        DomainStatus   @default(PENDING)
-  ownerId       Int
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  verifiedAt    DateTime?
+  id          Int          @id @default(autoincrement())
+  domainName  String       @unique
+  price       Float
+  description String
+  status      DomainStatus @default(PENDING)
+  ownerId     Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  verifiedAt  DateTime?
 
-  owner         User           @relation(fields: [ownerId], references: [id])
-  transactions  Transaction[]
-  ownerships    Ownership[]
+  owner        User          @relation(fields: [ownerId], references: [id])
+  transactions Transaction[]
+  ownerships   Ownership[]
 
   @@index([domainName])
 }
 
 model Ownership {
-  id            Int            @id @default(autoincrement())
-  domainId      Int
-  sellerId      Int
-  buyerId       Int
-  createdAt     DateTime       @default(now())
+  id        Int      @id @default(autoincrement())
+  domainId  Int
+  sellerId  Int
+  buyerId   Int
+  createdAt DateTime @default(now())
 
-  domain        Domain         @relation(fields: [domainId], references: [id])
-  seller        User           @relation("SellerOwnerships", fields: [sellerId], references: [id])
-  buyer         User           @relation("BuyerOwnerships", fields: [buyerId], references: [id])
+  domain Domain @relation(fields: [domainId], references: [id])
+  seller User   @relation("SellerOwnerships", fields: [sellerId], references: [id])
+  buyer  User   @relation("BuyerOwnerships", fields: [buyerId], references: [id])
 }
 
 model Transaction {
-  id            Int            @id @default(autoincrement())
-  domainId      Int
-  buyerId       Int
-  sellerId      Int
-  amount        Float
-  createdAt     DateTime       @default(now())
+  id        Int      @id @default(autoincrement())
+  domainId  Int
+  buyerId   Int
+  sellerId  Int
+  amount    Float
+  createdAt DateTime @default(now())
 
-  domain        Domain         @relation(fields: [domainId], references: [id])
-  buyer         User           @relation("BuyerTransactions", fields: [buyerId], references: [id])
-  seller        User           @relation("SellerTransactions", fields: [sellerId], references: [id])
+  domain Domain @relation(fields: [domainId], references: [id])
+  buyer  User   @relation("BuyerTransactions", fields: [buyerId], references: [id])
+  seller User   @relation("SellerTransactions", fields: [sellerId], references: [id])
+}
+
+model DomainVerification {
+  id               Int      @id @default(autoincrement())
+  domain           String   @db.VarChar(255)
+  verificationCode String   @db.VarChar(255)
+  userId           Int
+  isVerified       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
