@@ -1,8 +1,19 @@
 {
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "paths": {
+      "@/*": ["./src/*"],
+    }
   },
-  "include": ["src"],
+  "include": ["next-env.d.ts",
+    "next.config.js",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    ".next/types/**/*.ts", "postcss.config.cjs", "tailwind.config.cjs"],
   "exclude": ["node_modules", "dist"]
 }

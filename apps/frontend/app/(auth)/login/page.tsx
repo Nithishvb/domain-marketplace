@@ -1,9 +1,12 @@
-import React from 'react';
+import LoginForm from "@/ui/auth/login/login-form";
+import React from "react";
 
 const page = () => {
   return (
-    <div>Login page</div>
-  )
-}
+    <div className="h-screen">
+      <LoginForm />
+    </div>
+  );
+};
 
-export default page
+export default page;

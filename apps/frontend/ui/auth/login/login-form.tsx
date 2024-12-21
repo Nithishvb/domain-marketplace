@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@repo/ui";
+import { Input } from "@repo/ui";
 import {
   Form,
   FormControl,
@@ -15,7 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@repo/ui";
 import {
   Card,
   CardContent,
@@ -23,9 +23,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn } from "@/app/actions/auth";
+} from "@repo/ui";
+import { Alert, AlertDescription } from "@repo/ui";
+// import { signIn } from "@/app/actions/auth";
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -46,21 +46,12 @@ export default function SignInPage() {
   });
 
   const onSubmit = async (data: SignInValues) => {
-    try {
-      const result = await signIn(data);
-      if (result.success) {
-        router.push("/dashboard");
-      } else {
-        setError(result.error || "Invalid email or password");
-      }
-    } catch (err) {
-      setError("An unexpected error occurred");
-    }
+    console.log("Form values", data);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center h-screen min-w-[60%]">
+      <Card className="w-full min-w-md">
         <CardHeader>
           <CardTitle>Sign In</CardTitle>
           <CardDescription>
@@ -92,7 +83,7 @@ export default function SignInPage() {
                     <FormControl>
                       <Input
                         type="password"
-                    placeholder="Enter your password"
+                        placeholder="Enter your password"
                         {...field}
                       />
                     </FormControl>
