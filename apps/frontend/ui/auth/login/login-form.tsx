@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@repo/ui";
+import { Button, CardFooter } from "@repo/ui";
 import { Input } from "@repo/ui";
 import {
   Form,
@@ -19,24 +19,16 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@repo/ui";
 import { Alert, AlertDescription } from "@repo/ui";
-// import { signIn } from "@/app/actions/auth";
-
-const signInSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(1, { message: "Password is required" }),
-});
+import { signInSchema } from "lib/zod/schemas/auth";
 
 type SignInValues = z.infer<typeof signInSchema>;
 
-export default function SignInPage() {
+export default function LoginForm() {
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -50,17 +42,16 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen min-w-[60%]">
-      <Card className="w-full min-w-md">
+    <div className="flex items-center justify-center h-screen w-[100%]">
+      <Card style={{
+        width: "340px"
+      }}>
         <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>
-            Enter your credentials to access your account
-          </CardDescription>
+          <CardTitle className="flex justify-center">Sign In to your account</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="email"
@@ -74,6 +65,7 @@ export default function SignInPage() {
                   </FormItem>
                 )}
               />
+              <br />
               <FormField
                 control={form.control}
                 name="password"
@@ -96,6 +88,7 @@ export default function SignInPage() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
+              <br />
               <Button type="submit" className="w-full">
                 Sign In
               </Button>
