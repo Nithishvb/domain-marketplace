@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button, CardFooter } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { Input } from "@repo/ui";
 import {
   Form,
@@ -19,16 +19,21 @@ import {
 import {
   Card,
   CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@repo/ui";
 import { Alert, AlertDescription } from "@repo/ui";
+import { Loader2 } from "lucide-react";
 import { signInSchema } from "lib/zod/schemas/auth";
 
 type SignInValues = z.infer<typeof signInSchema>;
 
-export default function LoginForm() {
+export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -38,20 +43,21 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: SignInValues) => {
-    console.log("Form values", data);
+    console.log("Hello world");
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-[100%]">
-      <Card style={{
-        width: "340px"
-      }}>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="flex justify-center">Sign In to your account</CardTitle>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>
+            Enter your credentials to access your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"
@@ -65,7 +71,6 @@ export default function LoginForm() {
                   </FormItem>
                 )}
               />
-              <br />
               <FormField
                 control={form.control}
                 name="password"
@@ -88,9 +93,15 @@ export default function LoginForm() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <br />
-              <Button type="submit" className="w-full">
-                Sign In
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
           </Form>

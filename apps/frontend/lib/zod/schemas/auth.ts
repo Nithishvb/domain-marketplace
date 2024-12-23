@@ -18,3 +18,17 @@ export const signInSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+
+export const signUpSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  businessType: z.enum(["INDIVIDUAL", "BUSINESS"], {
+    errorMap: () => ({
+      message: "Business type must be either 'individual' or 'business'",
+    }),
+  }),
+});

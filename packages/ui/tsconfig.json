@@ -6,7 +6,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts",
