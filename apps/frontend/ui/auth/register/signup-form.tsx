@@ -56,7 +56,8 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: SignUpValues) => {
     try {
-      const res = await fetch("http://localhost:4000/api/v1/auth/signup", {
+      setIsLoading(true);
+      const res = await fetch(`${'http://localhost:4000/api/v1'}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -71,8 +72,13 @@ export default function SignUpPage() {
         }),
       });
       const result = await res.json();
-      console.log("Result", result);
+      setIsLoading(false);
+      if(result && result.user){
+        router.push("/login");
+      }
     } catch (err) {
+      setIsLoading(false);
+      setError((err as Error).message);
       console.log("Error reister", err);
     }
   };
@@ -186,7 +192,7 @@ export default function SignUpPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="BUSINESS">Business</SelectItem>
+                          <SelectItem value="COMPANY">Company</SelectItem>
                           <SelectItem value="INDIVIDUAL">Individual</SelectItem>
                         </SelectContent>
                       </Select>

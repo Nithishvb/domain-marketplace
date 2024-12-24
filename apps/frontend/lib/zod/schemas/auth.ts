@@ -26,7 +26,7 @@ export const signUpSchema = z.object({
   lastName: z.string().min(1, { message: "Last name is required" }),
   city: z.string().min(1, { message: "City is required" }),
   country: z.string().min(1, { message: "Country is required" }),
-  businessType: z.enum(["INDIVIDUAL", "BUSINESS"], {
+  businessType: z.enum(["INDIVIDUAL", "COMPANY"], {
     errorMap: () => ({
       message: "Business type must be either 'individual' or 'business'",
     }),

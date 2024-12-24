@@ -32,6 +32,7 @@ type SignInValues = z.infer<typeof signInSchema>;
 
 export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<SignInValues>({
@@ -43,7 +44,27 @@ export default function SignInPage() {
   });
 
   const onSubmit = async (data: SignInValues) => {
-    console.log("Hello world");
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${'http://localhost:4000/api/v1'}/auth/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
+      const result = await res.json();
+      setIsLoading(false);
+      if(result && result.user){
+        setIsLoading(false);
+        setSuccess("Login success");
+        // router.push("/login");
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setError((err as Error).message);
+    }
   };
 
   return (
@@ -91,6 +112,11 @@ export default function SignInPage() {
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              {success && (
+                <Alert variant="default">
+                  <AlertDescription>{success}</AlertDescription>
                 </Alert>
               )}
               <Button type="submit" className="w-full" disabled={isLoading}>
