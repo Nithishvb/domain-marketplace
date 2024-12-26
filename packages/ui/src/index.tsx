@@ -9,5 +9,6 @@ export * from "./components/ui/button.js";
 export * from "./components/ui/select.js";
 export * from "./components/ui/toast.js";
 export * from "./components/ui/toaster.js";
+export * from "./components/ui/separator.js";
 
 export * from "../hooks/use-toast.js"

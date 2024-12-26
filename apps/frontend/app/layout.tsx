@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"
+import { Monomaniac_One } from "next/font/google"
 import "./globals.css";
 import ToastProvider from "providers/ToastProvider";
 
-const inter = Inter({ subsets: ["latin"], weight: "400" });
+const inter = Monomaniac_One({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: "Create Next App",

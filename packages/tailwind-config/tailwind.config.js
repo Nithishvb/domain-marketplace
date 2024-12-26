@@ -53,6 +53,9 @@ module.exports = {
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
       },
+      clipPath: {
+        'custom-bottom': 'polygon(0 0, 100% 0, 100% 50%, 0 100%, 0 50%)',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],
