@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@repo/ui";
+import { Button, useToast } from "@repo/ui";
 import { Input } from "@repo/ui";
 import {
   Form,
@@ -24,15 +24,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui";
-import { Alert, AlertDescription } from "@repo/ui";
 import { Loader2 } from "lucide-react";
 import { signInSchema } from "lib/zod/schemas/auth";
 
 type SignInValues = z.infer<typeof signInSchema>;
 
 export default function SignInPage() {
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<SignInValues>({
@@ -42,6 +39,8 @@ export default function SignInPage() {
       password: "",
     },
   });
+
+  const { toast } = useToast();
 
   const onSubmit = async (data: SignInValues) => {
     try {
@@ -56,14 +55,24 @@ export default function SignInPage() {
       });
       const result = await res.json();
       setIsLoading(false);
-      if(result && result.user){
-        setIsLoading(false);
-        setSuccess("Login success");
-        // router.push("/login");
+      if(result && result.email){
+        toast({
+          title: "Login success",
+        })
+        router.push("/domains");
+      }else{
+        toast({
+          variant: "destructive",
+          title: result.message,
+        })
       }
     } catch (err) {
       setIsLoading(false);
-      setError((err as Error).message);
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: (err as Error).message
+      })
     }
   };
 
@@ -109,16 +118,6 @@ export default function SignInPage() {
                   </FormItem>
                 )}
               />
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-              {success && (
-                <Alert variant="default">
-                  <AlertDescription>{success}</AlertDescription>
-                </Alert>
-              )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>

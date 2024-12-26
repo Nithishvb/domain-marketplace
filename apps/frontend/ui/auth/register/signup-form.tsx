@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@repo/ui";
+import { Button, useToast } from "@repo/ui";
 import { Input } from "@repo/ui";
 import {
   Select,
@@ -31,14 +31,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui";
-import { Alert, AlertDescription } from "@repo/ui";
 import { Loader2 } from "lucide-react";
 import { signUpSchema } from "lib/zod/schemas/auth";
 
 type SignUpValues = z.infer<typeof signUpSchema>;
 
 export default function SignUpPage() {
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<SignUpValues>({
@@ -53,6 +51,8 @@ export default function SignUpPage() {
       businessType: undefined,
     },
   });
+
+  const { toast } = useToast();
 
   const onSubmit = async (data: SignUpValues) => {
     try {
@@ -74,12 +74,23 @@ export default function SignUpPage() {
       const result = await res.json();
       setIsLoading(false);
       if(result && result.user){
+        toast({
+          title: "Signup success",
+        })
         router.push("/login");
+      }else{
+        toast({
+          variant: "destructive",
+          title: result.message,
+        })
       }
     } catch (err) {
       setIsLoading(false);
-      setError((err as Error).message);
-      console.log("Error reister", err);
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: (err as Error).message
+      })
     }
   };
 
@@ -201,11 +212,6 @@ export default function SignUpPage() {
                   )}
                 />
               </div>
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
