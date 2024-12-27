@@ -125,9 +125,10 @@ export const signin = async (req: Request, res: Response) => {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', 
+      secure: false, 
       sameSite: "strict",
       maxAge: 5 * 60 * 60 * 1000,
+      path: '/', 
     });
 
     res.cookie('refresh_token', refreshToken, {

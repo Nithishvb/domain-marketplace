@@ -6,23 +6,18 @@ const userMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers["authorization"];
+  const authToken = req.cookies?.access_token;
 
-  if (!authHeader) {
+  console.log(req.cookies);
+
+  if (!authToken) {
     res.status(401).json({ message: "Authorization header missing" });
-    return;
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  if (!token) {
-    res.status(401).json({ message: "Token missing" });
     return;
   }
 
   try {
     const secretKey: string = process.env.JWT_PASSWORD || "";
-    const decoded = jwt.verify(token, secretKey) as {
+    const decoded = jwt.verify(authToken, secretKey) as {
       role: string;
       userId: number;
     };

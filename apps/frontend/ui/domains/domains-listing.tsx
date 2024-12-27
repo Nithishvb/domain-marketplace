@@ -15,8 +15,8 @@ interface DomainListingProps {
 
 const DomainsListing = ({ domains }: DomainListingProps) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-left">
+    <div className="flex justify-center w-[100%]">
+      <table className="w-full border-collapse text-left overflow-auto">
         <thead>
           <tr className="border-b border-gray-800 uppercase text-gray-300">
             <th className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-300">
@@ -32,6 +32,9 @@ const DomainsListing = ({ domains }: DomainListingProps) => {
               Price
             </th>
             <th className="whitespace-nowrap px-2 py-3 text-sm font-medium text-gray-300">
+              category
+            </th>
+            <th className="whitespace-nowrap px-2 py-3 text-sm font-medium text-gray-300">
               Onwer
             </th>
             <th className="whitespace-nowrap px-2 py-3 text-sm font-medium text-gray-300">
@@ -45,14 +48,15 @@ const DomainsListing = ({ domains }: DomainListingProps) => {
               key={domain.id}
               className="transition-colors hover:bg-gray-800/30 cursor-pointer"
             >
-              <td className="whitespace-nowrap px-4 py-3 font-medium text-lg">
+              <td className="whitespace-nowrap px-4 py-3 text-lg">
                 {domain.name}
               </td>
               <td className="whitespace-nowrap px-4 py-3">{10}</td>
-              <td className="whitespace-nowrap px-2 py-3 text-rose-400">{2}</td>
-              <td className="whitespace-nowrap px-2 py-3 text-emerald-400">
+              <td className="whitespace-nowrap px-2 py-3 text-[#FF8AAD]">{2}</td>
+              <td className="whitespace-nowrap px-2 py-3 text-[#92F7CB]">
                 ${domain.price}
               </td>
+              <td className="whitespace-nowrap px-2 py-3">{"verfied"}</td>
               <td className="whitespace-nowrap px-2 py-3">{"john"}</td>
               <td className="whitespace-nowrap px-2 py-3">
                 <Button

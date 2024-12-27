@@ -10,5 +10,9 @@ export * from "./components/ui/select.js";
 export * from "./components/ui/toast.js";
 export * from "./components/ui/toaster.js";
 export * from "./components/ui/separator.js";
+export * from "./components/ui/slider.js";
+export * from "./components/ui/badge.js";
+export * from "./components/ui/checkbox.js";
+export * from "./components/ui/double-range-slider.js";
 
 export * from "../hooks/use-toast.js"

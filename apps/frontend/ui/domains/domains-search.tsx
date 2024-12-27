@@ -10,10 +10,10 @@ const DomainSearch = () => {
             className="h-full w-full bg-cover bg-center"
             style={{
               backgroundImage:
-                "url('')",
+                "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4OrjjrwcMDgHA0_zR4wigtP1-KPrXZC3MlA&s')",
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 object-cover"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black object-cover"></div>
           </div>
         </div>
 

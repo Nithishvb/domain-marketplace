@@ -4,6 +4,7 @@ import DomainsFilter from "@/ui/domains/domains-filter";
 import DomainsListing from "@/ui/domains/domains-listing";
 import DomainSearch from "@/ui/domains/domains-search";
 import Header from "@/ui/header/header";
+import { useEffect, useState } from "react";
 
 const domains = [
   {
@@ -37,8 +38,28 @@ const domains = [
 ];
 
 export default function DomainListing() {
+
+  const [domainListing, setDomainListing] = useState([]);
+
+  useEffect(() => {
+    fetchListing();
+  }, []);
+
+  const fetchListing = async () => {
+    try{
+      const response = await fetch("http://localhost:4000/api/v1/domains", {
+        method: 'GET',
+        credentials: 'include',
+      });
+      const res = await response.json();
+      console.log(res);
+    }catch(err){
+      console.log("Error:", (err as Error).message); 
+    }
+  }
+
   return (
-    <div className="h-screen bg-gradient-to-b from-gray-900 to-black text-white overflow-auto">
+    <div className="h-screen bg-gradient-to-b from-gray-900 to-black text-white overflow-hidden">
       <div className="container">
         {/* Search Section */}
         <Header />
