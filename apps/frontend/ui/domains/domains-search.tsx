@@ -22,7 +22,7 @@ const DomainSearch = () => {
           <div className="mb-2 text-sm font-medium text-white/80">
             DOMAIN NAME SEARCH
           </div>
-          <h1 className="mb-8 text-5xl font-bold text-white">
+          <h1 className="mb-8 text-4xl font-bold text-white">
             Find the domain that defines your brand
           </h1>
 

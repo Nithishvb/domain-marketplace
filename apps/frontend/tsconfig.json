@@ -10,6 +10,7 @@
     "paths": {
       "@/pages/*": ["pages/*"],
       "@/ui/*": ["ui/*"],
+      "@/lib/*": ["lib/*"],
     }
   },
   "include": [

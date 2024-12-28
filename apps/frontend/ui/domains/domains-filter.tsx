@@ -1,22 +1,18 @@
 import React, { useState } from "react";
-import { Badge, Card, CardContent, CardHeader, CardTitle, Checkbox, DoubleRangeSlider, Label, Slider } from "@repo/ui";
+import { Badge, Card, CardContent, CardHeader, CardTitle, Checkbox, DoubleRangeSlider, Label } from "@repo/ui";
 import { Separator } from "@repo/ui";
 import {  Clock, DollarSign, Tags } from "lucide-react";
 
 
-const categories = [
-  { id: "business", label: "Business" },
-  { id: "technology", label: "Technology" },
-  { id: "ecommerce", label: "E-commerce" },
-  { id: "finance", label: "Finance" },
-  { id: "health", label: "Health" },
-  { id: "education", label: "Education" },
+const domainStatus = [
+  { id: "business", label: "Verified" },
+  { id: "technology", label: "Not verified" }
 ]
 
 const DomainsFilter = () => {
 
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000])
-  const [ageRange, setAgeRange] = React.useState<[number, number]>([0, 10]);
+  const [ageRange, setAgeRange] = React.useState<[number, number]>([0, 1000]);
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
 
   const formatPrice = (value: number) => `$${value}`
@@ -65,22 +61,22 @@ const DomainsFilter = () => {
           <div className="flex items-center justify-between">
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-200">
               <Clock className="h-4 w-4" />
-              Domain Age
+              Domain Traffic
             </Label>
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="bg-gray-800 text-gray-200">
-                {ageRange[0]}y
+                {ageRange[0]}
               </Badge>
               <span className="text-gray-500">-</span>
               <Badge variant="secondary" className="bg-gray-800 text-gray-200">
-                {ageRange[1]}y
+                {ageRange[1]}
               </Badge>
             </div>
           </div>
           <DoubleRangeSlider
             min={0}
-            max={10}
-            step={1}
+            max={1000}
+            step={10}
             value={ageRange}
             onValueChange={setAgeRange}
             formatValue={formatAge}
@@ -93,10 +89,10 @@ const DomainsFilter = () => {
         <div className="space-y-4">
           <Label className="flex items-center gap-2 text-sm font-medium text-gray-200">
             <Tags className="h-4 w-4" />
-            Categories
+            Status
           </Label>
           <div className="grid gap-3">
-            {categories.map((category) => (
+            {domainStatus.map((category) => (
               <div
                 key={category.id}
                 className="group flex items-center space-x-3 space-y-0"
@@ -119,12 +115,6 @@ const DomainsFilter = () => {
                 >
                   {category.label}
                 </Label>
-                <Badge
-                  variant="secondary"
-                  className="ml-auto bg-gray-800 text-xs text-gray-400"
-                >
-                  {Math.floor(Math.random() * 100)}
-                </Badge>
               </div>
             ))}
           </div>

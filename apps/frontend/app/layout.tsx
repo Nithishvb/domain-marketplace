@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Monomaniac_One } from "next/font/google"
 import "./globals.css";
 import ToastProvider from "providers/ToastProvider";
+import { Geist_Mono } from "next/font/google";
+import StoreProvider from "./storeProviders";
 
-const inter = Monomaniac_One({ subsets: ["latin"], weight: "400" });
+const inter = Geist_Mono({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,10 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} `}>
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+      <body className={`${inter.className}`}>
+        <StoreProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </StoreProvider>
       </body>
     </html>
   );

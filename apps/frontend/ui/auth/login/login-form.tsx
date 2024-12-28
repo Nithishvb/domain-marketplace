@@ -52,6 +52,7 @@ export default function SignInPage() {
           email: data.email,
           password: data.password,
         }),
+        credentials: "include"
       });
       const result = await res.json();
       setIsLoading(false);

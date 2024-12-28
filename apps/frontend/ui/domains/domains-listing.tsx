@@ -32,7 +32,7 @@ const DomainsListing = ({ domains }: DomainListingProps) => {
               Price
             </th>
             <th className="whitespace-nowrap px-2 py-3 text-sm font-medium text-gray-300">
-              category
+            status
             </th>
             <th className="whitespace-nowrap px-2 py-3 text-sm font-medium text-gray-300">
               Onwer
@@ -48,17 +48,17 @@ const DomainsListing = ({ domains }: DomainListingProps) => {
               key={domain.id}
               className="transition-colors hover:bg-gray-800/30 cursor-pointer"
             >
-              <td className="whitespace-nowrap px-4 py-3 text-lg">
+              <td className="whitespace-nowrap px-4 py-3 text-md">
                 {domain.name}
               </td>
-              <td className="whitespace-nowrap px-4 py-3">{10}</td>
-              <td className="whitespace-nowrap px-2 py-3 text-[#FF8AAD]">{2}</td>
-              <td className="whitespace-nowrap px-2 py-3 text-[#92F7CB]">
+              <td className="whitespace-nowrap px-4 py-3 text-sm">{10}</td>
+              <td className="whitespace-nowrap px-2 py-3 text-[#FF8AAD] text-sm">{2}</td>
+              <td className="whitespace-nowrap px-2 py-3 text-[#92F7CB] text-sm">
                 ${domain.price}
               </td>
-              <td className="whitespace-nowrap px-2 py-3">{"verfied"}</td>
-              <td className="whitespace-nowrap px-2 py-3">{"john"}</td>
-              <td className="whitespace-nowrap px-2 py-3">
+              <td className="whitespace-nowrap px-2 py-3 text-sm">{"verfied"}</td>
+              <td className="whitespace-nowrap px-2 py-3 text-sm">{"john"}</td>
+              <td className="whitespace-nowrap px-2 py-3 text-sm">
                 <Button
                   variant="secondary"
                   className="bg-purple-600 text-white transition-colors hover:bg-purple-700"

@@ -4,7 +4,7 @@ import DomainsFilter from "@/ui/domains/domains-filter";
 import DomainsListing from "@/ui/domains/domains-listing";
 import DomainSearch from "@/ui/domains/domains-search";
 import Header from "@/ui/header/header";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const domains = [
   {
@@ -39,9 +39,9 @@ const domains = [
 
 export default function DomainListing() {
 
-  const [domainListing, setDomainListing] = useState([]);
+  // const { priceRange, status, domains: FilteredDomain } = useAppSelector((state) => state.filter);
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchListing();
   }, []);
 
@@ -66,7 +66,7 @@ export default function DomainListing() {
 
         <div className="border border-gray-700"></div>
 
-        <div className="grid md:grid-cols-[280px_1fr] bor">
+        <div className="grid md:grid-cols-[310px_1fr] bor">
           {/* Filter Section */}
           <DomainsFilter />
 

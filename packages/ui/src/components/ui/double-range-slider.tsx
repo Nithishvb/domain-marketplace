@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react"
 
-import { Slider } from "./slider.js"
 import { Input } from "./input.js"
 import { CustomSlider } from "./custom-slider.js"
 
@@ -46,37 +45,40 @@ export function DoubleRangeSlider({
   const handleSliderChange = useCallback(
     (newValue: number[]) => {
       const [newMin, newMax] = newValue as [number, number]
-      setLocalValue([newMin, newMax])
-      setInputValues({
-        min: newMin.toString(),
-        max: newMax.toString(),
-      })
-      onValueChange([newMin, newMax])
+      if (newMin <= newMax) {
+        setLocalValue([newMin, newMax])
+        setInputValues({
+          min: newMin.toString(),
+          max: newMax.toString(),
+        })
+        onValueChange([newMin, newMax])
+      }
     },
     [onValueChange]
   )
 
   const handleInputChange = useCallback(
     (type: "min" | "max", inputValue: string) => {
-      setInputValues((prev) => ({
-        ...prev,
-        [type]: inputValue,
-      }))
-
       const numericValue = parseFloat(inputValue)
       if (!isNaN(numericValue)) {
-        if (type === "min") {
-          const validMin = Math.max(min, Math.min(numericValue, localValue[1]))
-          onValueChange([validMin, localValue[1]])
-        } else {
-          const validMax = Math.min(max, Math.max(numericValue, localValue[0]))
-          onValueChange([localValue[0], validMax])
-        }
+        let newMin = type === "min" ? numericValue : localValue[0]
+        let newMax = type === "max" ? numericValue : localValue[1]
+
+        // Ensure min doesn't exceed max and max doesn't go below min
+        newMin = Math.max(min, Math.min(newMin, newMax))
+        newMax = Math.min(max, Math.max(newMax, newMin))
+
+        setLocalValue([newMin, newMax])
+        setInputValues({
+          min: newMin.toString(),
+          max: newMax.toString(),
+        })
+        onValueChange([newMin, newMax])
       }
     },
     [localValue, min, max, onValueChange]
   )
-
+  
   const handleInputBlur = useCallback(
     (type: "min" | "max") => {
       const value = parseFloat(inputValues[type])
@@ -98,7 +100,7 @@ export function DoubleRangeSlider({
         step={step}
         value={localValue}
         onValueChange={handleSliderChange}
-        className="py-4 text-red-500"
+        className="py-4"
         style={{
           "--track-color": `var(--${trackColor})`,
           "--range-color": `var(--${rangeColor})`,
