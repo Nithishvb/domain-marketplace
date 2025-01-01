@@ -8,8 +8,6 @@ const userMiddleware = (
 ) => {
   const authToken = req.cookies?.access_token;
 
-  console.log(req.cookies);
-
   if (!authToken) {
     res.status(401).json({ message: "Authorization header missing" });
     return;

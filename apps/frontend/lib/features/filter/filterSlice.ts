@@ -1,21 +1,22 @@
-import { RootState } from "@/lib/store/store";
+import { IDomainList } from "@/lib/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const fetchDomains = createAsyncThunk(
   'data/fetch',
-  async (_, { getState }) => {
-    const state = getState() as RootState;
-    const { priceRange, status } = state.filter;
+  async (filters?: { priceRange?: {
+    min: number;
+    max: number;
+  }; search?: string }) => {
 
     const queryParams = new URLSearchParams({
-      priceRange: JSON.stringify({
-        min: priceRange.min,
-        max: priceRange.max
-      }),
-      status: status
+      minPrice: filters?.priceRange?.min.toString() || 'null',
+      maxPrice: filters?.priceRange?.max.toString() || 'null',
     });
 
-    const response = await fetch(``);
+    const response = await fetch(``, {
+      method: "GET",
+      credentials: "include"
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -30,7 +31,7 @@ export interface FilterStateType {
     max: number;
   };
   status: "verified" | "not verified" | "all";
-  domains: string[]
+  domains: IDomainList[]
 }
 
 const initialState: FilterStateType = {
@@ -62,7 +63,7 @@ const filterSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchDomains.fulfilled, (state, action) => {
-      state.domains.push(action.payload as string);
+      state.domains = action.payload.domains;
     })
   }
 });
