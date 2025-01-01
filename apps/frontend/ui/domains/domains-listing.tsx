@@ -1,16 +1,9 @@
 import React from "react";
 import { Button } from "@repo/ui";
-
-interface DomainList {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  age: number;
-}
+import { IDomainList } from "@/lib/types";
 
 interface DomainListingProps {
-  domains: DomainList[];
+  domains: IDomainList[];
 }
 
 const DomainsListing = ({ domains }: DomainListingProps) => {
@@ -49,9 +42,9 @@ const DomainsListing = ({ domains }: DomainListingProps) => {
               className="transition-colors hover:bg-gray-800/30 cursor-pointer"
             >
               <td className="whitespace-nowrap px-4 py-3 text-md">
-                {domain.name}
+                {domain.domainName}
               </td>
-              <td className="whitespace-nowrap px-4 py-3 text-sm">{10}</td>
+              <td className="whitespace-nowrap px-4 py-3 text-sm">{domain.price}</td>
               <td className="whitespace-nowrap px-2 py-3 text-[#FF8AAD] text-sm">{2}</td>
               <td className="whitespace-nowrap px-2 py-3 text-[#92F7CB] text-sm">
                 ${domain.price}

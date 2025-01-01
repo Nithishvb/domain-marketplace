@@ -14,5 +14,6 @@ export * from "./components/ui/slider.js";
 export * from "./components/ui/badge.js";
 export * from "./components/ui/checkbox.js";
 export * from "./components/ui/double-range-slider.js";
+export * from "./components/ui/spinning-loader.js";
 
 export * from "../hooks/use-toast.js"

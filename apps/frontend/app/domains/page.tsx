@@ -1,84 +1,56 @@
-"use client";
+"use client"
 
-import DomainsFilter from "@/ui/domains/domains-filter";
-import DomainsListing from "@/ui/domains/domains-listing";
-import DomainSearch from "@/ui/domains/domains-search";
-import Header from "@/ui/header/header";
-import { useEffect } from "react";
+import { useEffect } from "react"
+import { useDispatch } from "react-redux"
 
-const domains = [
-  {
-    id: 1,
-    name: "example.com",
-    price: 2999,
-    category: "Business",
-    age: 5,
-  },
-  {
-    id: 2,
-    name: "startup.io",
-    price: 1499,
-    category: "Technology",
-    age: 2,
-  },
-  {
-    id: 3,
-    name: "brand.store",
-    price: 899,
-    category: "E-commerce",
-    age: 1,
-  },
-  {
-    id: 4,
-    name: "crypto.finance",
-    price: 4999,
-    category: "Finance",
-    age: 3,
-  },
-];
+import { fetchDomains } from "@/lib/features/filter/filterSlice"
+import { useAppSelector } from "@/lib/hooks"
+import { AppDispatch } from "@/lib/store/store"
+import DomainsFilter from "@/ui/domains/domains-filter"
+import DomainsListing from "@/ui/domains/domains-listing"
+import DomainSearch from "@/ui/domains/domains-search"
+import Header from "@/ui/header/header"
+import { SpinningLoader } from "@repo/ui"
 
 export default function DomainListing() {
+  const dispatch = useDispatch<AppDispatch>()
+  const { domains } = useAppSelector((state) => state.filter)
 
-  // const { priceRange, status, domains: FilteredDomain } = useAppSelector((state) => state.filter);
-
-  useEffect(() => { 
-    fetchListing();
-  }, []);
-
-  const fetchListing = async () => {
-    try{
-      const response = await fetch("http://localhost:4000/api/v1/domains", {
-        method: 'GET',
-        credentials: 'include',
-      });
-      const res = await response.json();
-      console.log(res);
-    }catch(err){
-      console.log("Error:", (err as Error).message); 
-    }
-  }
+  useEffect(() => {
+    dispatch(fetchDomains())
+  }, [dispatch])
 
   return (
-    <div className="h-screen bg-gradient-to-b from-gray-900 to-black text-white overflow-hidden">
-      <div className="container">
-        {/* Search Section */}
-        <Header />
+    <div className="flex h-screen flex-col bg-gradient-to-b from-gray-900 to-black text-white">
+      {/* Header - Fixed at top */}
+      <Header />
+      
+      <div className="border-b border-gray-700" />
 
-        <div className="border border-gray-700"></div>
-
-        <div className="grid md:grid-cols-[310px_1fr] bor">
-          {/* Filter Section */}
+      {/* Main Content Area */}
+      <div className="relative flex flex-1 overflow-hidden">
+        {/* Sidebar - Fixed */}
+        <aside className="w-[310px] flex-shrink-0">
           <DomainsFilter />
+        </aside>
 
-          {/* Domain Listings */}
-          <div>
+        {/* Content - Scrollable */}
+        <main className="flex-1 overflow-auto">
+          <div className="h-full">
             <DomainSearch />
             <div className="px-4 py-4">
-              <DomainsListing domains={domains} />
+              {domains.length === 0 ? (
+                <div className="flex justify-center">
+                  <SpinningLoader />
+                </div>
+              ) : (
+                <DomainsListing domains={domains} />
+              )}
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
-  );
+  )
 }
+
